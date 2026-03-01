@@ -1,0 +1,125 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  @apply m-0 p-0 box-border;
+}
+
+html {
+  @apply scroll-smooth;
+  /* Smooth scrolling for all browsers */
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-background text-foreground transition-colors duration-300;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* Selection styling */
+::selection {
+  @apply bg-primary text-white;
+}
+
+::-webkit-scrollbar {
+  @apply w-2 h-2;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-surface;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-surface-light rounded hover:bg-surface-lighter;
+}
+
+/* Focus visible */
+:focus-visible {
+  @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
+}
+
+/* Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply font-display font-bold tracking-tight;
+}
+
+h1 {
+  @apply text-4xl;
+}
+
+h2 {
+  @apply text-3xl;
+}
+
+h3 {
+  @apply text-2xl;
+}
+
+h4 {
+  @apply text-xl;
+}
+
+/* Links */
+a {
+  @apply text-primary hover:text-primary/80 transition-colors duration-150;
+}
+
+/* Code blocks */
+code {
+  @apply font-mono text-sm bg-surface px-1.5 py-0.5 rounded;
+}
+
+pre {
+  @apply bg-surface p-4 rounded-lg overflow-auto border border-border;
+}
+
+/* Inputs */
+input,
+textarea,
+select {
+  @apply transition-colors duration-150;
+}
+
+input::placeholder,
+textarea::placeholder {
+  @apply text-foreground-subtle;
+}
+
+/* Button reset */
+button {
+  @apply cursor-pointer;
+}
+
+/* Reduce motion for prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    @apply !animate-none !transition-none;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Dark mode (default) */
+:root {
+  color-scheme: dark;
+}
+
+/* Light mode */
+[data-theme='light'] {
+  color-scheme: light;
+}
+
+/* Container queries for responsive components */
+@supports (container-type: inline-size) {
+  @container (max-width: 640px) {
+    /* Mobile optimized styles */
+  }
+}

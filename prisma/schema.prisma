@@ -1,0 +1,131 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User management
+model User {
+  id                String   @id @default(cuid())
+  
+  // GitHub OAuth info
+  githubId          Int      @unique
+  githubUsername    String   @unique
+  githubProfileUrl  String
+  
+  // User profile
+  email             String?  @unique
+  avatarUrl         String?
+  bio               String?
+  location          String?
+  websiteUrl        String?
+
+  // Settings
+  theme             String   @default("dark")
+  emailNotifications Boolean @default(true)
+  publicProfile     Boolean  @default(true)
+
+  // Relations
+  achievements      Achievement[]
+  followers         Follow[]      @relation("follower")
+  following         Follow[]      @relation("following")
+  activityLogs      ActivityLog[]
+  sessions          Session[]
+
+  // Timestamps
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([githubUsername])
+  @@index([email])
+}
+
+// Achievement tracking
+model Achievement {
+  id                String   @id @default(cuid())
+  
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String
+
+  // Achievement type
+  type              String   // ENUM: QUICK_DRAW, PULL_SHARK, YOLO, PAIR_EXTRAORDINAIRE, GALAXY_BRAIN, STARSTRUCK, PUBLIC_SPONSOR, HEART_ON_YOUR_SLEEVE
+
+  // Progress tracking
+  progress          Int      @default(0) // 0-100
+  unlockedAt        DateTime?
+
+  // Metadata
+  metadata          Json?
+
+  // Timestamps
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@unique([userId, type])
+  @@index([userId])
+  @@index([type])
+  @@index([unlockedAt])
+}
+
+// Social following
+model Follow {
+  id                String   @id @default(cuid())
+
+  follower          User     @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
+  followerId        String
+
+  following         User     @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
+  followingId       String
+
+  createdAt         DateTime @default(now())
+
+  @@unique([followerId, followingId])
+  @@index([followerId])
+  @@index([followingId])
+}
+
+// Activity logs
+model ActivityLog {
+  id                String   @id @default(cuid())
+
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String
+
+  // Activity details
+  action            String   // Event type: ACHIEVEMENT_UNLOCKED, PR_CREATED, ISSUE_CLOSED, etc.
+  description       String?
+  payload           Json?
+
+  // GitHub integration
+  githubEventId     String?
+  githubEventType   String?  // PR, Issue, Discussion, etc.
+
+  // Timestamps
+  createdAt         DateTime @default(now())
+
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+}
+
+// Session management
+model Session {
+  id                String   @id @default(cuid())
+
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String
+
+  token             String   @unique
+  expiresAt         DateTime
+
+  createdAt         DateTime @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+}

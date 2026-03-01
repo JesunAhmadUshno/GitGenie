@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gitgenie
+  labels:
+    name: gitgenie
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gitgenie-config
+  namespace: gitgenie
+data:
+  NODE_ENV: "production"
+  NEXT_PUBLIC_API_URL: "https://api.yourdomain.com"
+  API_ORIGIN: "https://yourdomain.com"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: gitgenie-secrets
+  namespace: gitgenie
+type: Opaque
+stringData:
+  GITHUB_CLIENT_ID: "your_github_client_id"
+  GITHUB_CLIENT_SECRET: "your_github_client_secret"
+  JWT_SECRET: "your_jwt_secret_here"
+  SESSION_SECRET: "your_session_secret_here"
+  DATABASE_URL: "postgresql://user:password@postgres-service:5432/gitgenie"
+  REDIS_URL: "redis://redis-service:6379"
