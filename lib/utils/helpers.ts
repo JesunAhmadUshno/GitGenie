@@ -158,16 +158,20 @@ export function deepMerge<T extends Record<string, unknown>>(
   target: T,
   source: Partial<T>
 ): T {
-  const output = { ...target }
+  const output = { ...target } as T
 
   for (const key in source) {
-    if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
-      output[key] = deepMerge(
-        target[key] as Record<string, unknown>,
-        source[key] as Record<string, unknown>
-      ) as unknown
+    const typedKey = key as keyof T
+    const sourceValue = source[typedKey]
+    const targetValue = target[typedKey]
+
+    if (sourceValue && typeof sourceValue === 'object' && !Array.isArray(sourceValue)) {
+      output[typedKey] = deepMerge(
+        (targetValue as Record<string, unknown>) ?? {},
+        sourceValue as Partial<Record<string, unknown>>
+      ) as T[keyof T]
     } else {
-      output[key] = source[key] as unknown
+      output[typedKey] = sourceValue as T[keyof T]
     }
   }
 

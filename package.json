@@ -28,9 +28,12 @@
     "axios": "latest",
     "clsx": "latest",
     "date-fns": "latest",
+    "dotenv": "^17.3.1",
     "express": "latest",
+    "express-rate-limit": "^8.2.1",
     "framer-motion": "latest",
     "gsap": "latest",
+    "helmet": "^8.1.0",
     "js-cookie": "latest",
     "next": "latest",
     "postcss": "latest",
@@ -42,7 +45,9 @@
     "zustand": "latest"
   },
   "devDependencies": {
-    "@types/node": "latest",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.3.3",
     "@types/react": "19.2.14",
     "eslint": "latest",
     "prettier": "latest",

@@ -14,7 +14,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     error,
     icon,
     id,
-    {...props}
+    ...props
   }, ref) => {
     const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`
 
@@ -37,7 +37,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               'disabled:opacity-50 disabled:cursor-not-allowed',
               'transition-all duration-150',
               error && 'border-error',
-              icon && 'pl-10',
+              !!icon && 'pl-10',
               className
             )}
             {...props}
