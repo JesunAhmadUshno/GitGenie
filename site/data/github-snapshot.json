@@ -1,0 +1,66 @@
+{
+  "captured_at": "2026-11-07T07:35:47.559Z",
+  "source": "gh api (GitHub REST v3) for JesunAhmadUshno/GitGenie",
+  "pulls": [
+    {
+      "number": 1,
+      "title": "docs: touch readme for PR #1",
+      "head": "feat/pr1-readme-touch",
+      "created_at": "2026-03-01T20:49:01Z",
+      "merged_at": "2026-03-01T20:49:09Z",
+      "commits": 1,
+      "review_count": 2,
+      "review_states": [
+        "COMMENTED",
+        "COMMENTED"
+      ],
+      "review_comments": 2
+    },
+    {
+      "number": 2,
+      "title": "docs: touch readme for PR #2 (yolo)",
+      "head": "feat/pr2-readme-touch",
+      "created_at": "2026-03-01T20:49:26Z",
+      "merged_at": "2026-11-07T02:57:02Z",
+      "commits": 2,
+      "review_count": 3,
+      "review_states": [
+        "COMMENTED",
+        "COMMENTED",
+        "APPROVED"
+      ],
+      "review_comments": 0
+    },
+    {
+      "number": 4,
+      "title": "feat: Pair Extraordinaire co-authored commit",
+      "head": "feat/pair-extra-mcarolina",
+      "created_at": "2026-03-01T21:11:30Z",
+      "merged_at": "2026-03-01T21:11:47Z",
+      "commits": 1,
+      "review_count": 2,
+      "review_states": [
+        "COMMENTED",
+        "COMMENTED"
+      ],
+      "review_comments": 1
+    }
+  ],
+  "issues": [
+    {
+      "number": 3,
+      "title": "QuickDraw badge trigger",
+      "created_at": "2026-03-01T20:51:12Z",
+      "closed_at": "2026-03-01T20:51:13Z"
+    }
+  ],
+  "repo": {
+    "stargazers_count": 0,
+    "forks_count": 0
+  },
+  "search_pr_item": {
+    "has_top_level_merged_at": false,
+    "has_review_comments": false,
+    "has_pull_request_merged_at": true
+  }
+}
