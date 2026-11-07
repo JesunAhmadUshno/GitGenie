@@ -60,3 +60,9 @@ playwright-report/
 # Cache
 .eslintcache
 .prettierignore
+
+# Live dashboard (site/)
+site/.rubric/
+site/node_modules/
+site/dist/
+site/src/data/history.json
