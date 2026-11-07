@@ -1,5 +1,10 @@
-name: Deploy to GitHub Pages
+name: Next.js build check
 
+# Formerly deployed the Next.js export to Pages. That export loaded every asset from
+# /gitgenie/ while Pages serves /GitGenie/, so the live page rendered unstyled. Pages is
+# now published by pages.yml (the site/ dashboard); this workflow only checks that the
+# Next.js app still builds and that the engine tests pass. It no longer deploys, so the
+# two workflows cannot overwrite each other.
 on:
   push:
     branches:
@@ -11,12 +16,6 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: false
 
 jobs:
   build:
@@ -28,28 +27,14 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
+      - name: Engine tests
+        run: npm test
+
       - name: Build
         run: npm run build
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./out
-
-  deploy:
-    if: github.ref == 'refs/heads/main'
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
