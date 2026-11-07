@@ -11,7 +11,7 @@ const pulls = [1, 2, 4].map((n) => {
   const pr = api(`repos/${REPO}/pulls/${n}`);
   const reviews = api(`repos/${REPO}/pulls/${n}/reviews`);
   return {
-    number: pr.number, title: pr.title, head: pr.head.ref,
+    number: pr.number, head: pr.head.ref, // titles come from the merge commits in git log
     created_at: pr.created_at, merged_at: pr.merged_at, commits: pr.commits,
     review_count: reviews.length, review_states: reviews.map((r) => r.state),
     review_comments: pr.review_comments,
@@ -26,7 +26,7 @@ const out = {
   captured_at: new Date().toISOString(),
   source: `gh api (GitHub REST v3) for ${REPO}`,
   pulls,
-  issues: [{ number: issue.number, title: issue.title, created_at: issue.created_at, closed_at: issue.closed_at }],
+  issues: [{ number: issue.number, created_at: issue.created_at, closed_at: issue.closed_at }],
   repo: { stargazers_count: repo.stargazers_count, forks_count: repo.forks_count },
   search_pr_item: {
     has_top_level_merged_at: 'merged_at' in item,

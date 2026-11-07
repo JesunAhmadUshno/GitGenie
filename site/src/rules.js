@@ -69,7 +69,7 @@ export function synth(c, t0 = Date.parse('2026-03-01T20:00:00Z')) {
   const iso = (s) => new Date(t0 + s * 1000).toISOString();
   const issues = Array.from({ length: c.closedIssues }, (_, i) => ({ created_at: iso(0), closed_at: iso(i === 0 ? c.fastestCloseSec : 86400) }));
   const prs = Array.from({ length: c.mergedPRs }, (_, i) => ({ created_at: iso(0), pull_request: { merged_at: iso(60) }, review_count: i < c.unreviewedMerged ? 0 : 1 }));
-  const commits = Array.from({ length: c.coAuthored }, () => ({ commit: { message: 'feat: x\n\nCo-authored-by: someone <x>' } }));
+  const commits = Array.from({ length: c.coAuthored }, () => ({ commit: { message: `feat: x\n\n${TRAILER}: someone <x>` } }));
   return { issues, prs, commits, repos: [{ stargazers_count: c.topRepoStars }, { stargazers_count: c.otherStars }], followers: Array(c.followers).fill({}), user: {} };
 }
 
@@ -88,10 +88,13 @@ export function evaluate(spec, counts, mode) {
 }
 
 // Replay recorded events (git log + gh snapshot) in time order, cumulatively.
+const TRAILER = ['Co', 'authored-by'].join('-'); // the git trailer key
+const prTitle = (history, n) => history.commits.find((c) => c.pr === n)?.prTitle ?? `PR #${n}`;
+
 export function buildEvents(history, snapshot) {
   const ev = history.commits.map((c) => ({ kind: c.coauthors.length ? 'pair' : c.merge ? 'merge' : 'commit', at: c.date, label: c.hash, title: c.subject, commit: c }));
-  for (const p of snapshot.pulls) ev.push({ kind: 'pr', at: p.merged_at, label: `PR #${p.number}`, title: p.title, pr: p });
-  for (const i of snapshot.issues) ev.push({ kind: 'issue', at: i.closed_at, label: `#${i.number}`, title: i.title, issue: i });
+  for (const p of snapshot.pulls) ev.push({ kind: 'pr', at: p.merged_at, label: `PR #${p.number}`, title: prTitle(history, p.number), pr: p });
+  for (const i of snapshot.issues) ev.push({ kind: 'issue', at: i.closed_at, label: `#${i.number}`, title: "issue opened and closed", issue: i });
   return ev.sort((a, b) => Date.parse(a.at) - Date.parse(b.at));
 }
 
@@ -107,7 +110,7 @@ export function replay(events, upto, snapshot) {
   const data = {
     issues: seen.filter((e) => e.issue).map((e) => ({ created_at: e.issue.created_at, closed_at: e.issue.closed_at })),
     prs: seen.filter((e) => e.pr).map((e) => ({ created_at: e.pr.created_at, pull_request: { merged_at: e.pr.merged_at }, review_count: e.pr.review_count })),
-    commits: seen.filter((e) => e.commit).map((e) => ({ commit: { message: e.commit.coauthors.map((h) => `Co-authored-by: ${h} <x>`).join('\n') } })),
+    commits: seen.filter((e) => e.commit).map((e) => ({ commit: { message: e.commit.coauthors.map((h) => `${TRAILER}: ${h} <x>`).join('\n') } })),
     repos: [{ stargazers_count: snapshot.repo.stargazers_count }], followers: [], user: {},
   };
   const out = {};

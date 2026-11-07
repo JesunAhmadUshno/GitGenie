@@ -12,8 +12,10 @@ const SEP = '\x1f', END = '\x1e';
 const commits = git('log', '--reverse', `--format=%H${SEP}%an${SEP}%aI${SEP}%P${SEP}%s${SEP}%b${END}`)
   .split(END).map((r) => r.trim()).filter(Boolean).map((r) => {
     const [hash, author, date, parents, subject, body] = r.split(SEP);
-    const coauthors = [...body.matchAll(/^co-authored-by:\s*([^<\n]+?)\s*</gim)].map((m) => m[1]);
-    return { hash: hash.slice(0, 7), author, date, merge: parents.split(' ').length > 1, subject, coauthors };
+    const coauthors = [...body.matchAll(/^co-?authored-by:\s*([^<\n]+?)\s*</gim)].map((m) => m[1]);
+    const pr = subject.match(/^Merge pull request #(\d+)/);
+    return { hash: hash.slice(0, 7), author, date, merge: parents.split(' ').length > 1, subject, coauthors,
+      ...(pr && { pr: +pr[1], prTitle: body.split('\n')[0].trim() }) };
   });
 
 // Each quoted defect: file, a unique needle in the original source, and what it gets wrong.

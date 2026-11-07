@@ -162,7 +162,7 @@ const ENGINE_NOTE = {
   QUICK_DRAW: 'Original counts closed issues; fixed compares closed_at − created_at with the limit.',
   PULL_SHARK: 'Original reads pr.merged_at; fixed reads pull_request.merged_at from search items.',
   YOLO: 'Original reads review_comments; fixed needs a known review count of zero.',
-  PAIR_EXTRAORDINAIRE: 'Original always returns locked; fixed reads Co-authored-by trailers.',
+  PAIR_EXTRAORDINAIRE: 'Original always returns locked; fixed reads co-author trailers.',
   GALAXY_BRAIN: 'Both count issues opened. Discussion answers are never fetched.',
   STARSTRUCK: 'Original sums stars over all repos; fixed takes the best single repo.',
   PUBLIC_SPONSOR: 'Both always return locked: sponsor status is not fetched.',
@@ -229,7 +229,7 @@ function Playground({ mode, setMode }) {
         <Range label="Fastest open-to-close" value={c.fastestCloseSec} min={1} max={900} onChange={set('fastestCloseSec')} show={c.fastestCloseSec < 60 ? `${c.fastestCloseSec} s` : `${(c.fastestCloseSec / 60).toFixed(1)} min`} />
         <Range label="Stars on your best repo" value={c.topRepoStars} min={0} max={40} onChange={set('topRepoStars')} />
         <Range label="Stars on all other repos" value={c.otherStars} min={0} max={40} onChange={set('otherStars')} />
-        <Range label="Co-authored commits" value={c.coAuthored} min={0} max={5} onChange={set('coAuthored')} />
+        <Range label="Commits with a co-author" value={c.coAuthored} min={0} max={5} onChange={set('coAuthored')} />
         <Range label="Accepted discussion answers" value={c.acceptedAnswers} min={0} max={5} onChange={set('acceptedAnswers')} />
         <Range label="Followers" value={c.followers} min={0} max={40} onChange={set('followers')} />
         <div className="field check"><label htmlFor="sponsor"><input id="sponsor" type="checkbox" checked={c.sponsoring} onChange={(e) => set('sponsoring')(e.target.checked)} /> Active public sponsorship</label></div>
@@ -257,7 +257,7 @@ function Playground({ mode, setMode }) {
   );
 }
 
-const KIND = { commit: ['Commit', 'var(--muted)'], merge: ['Merge commit', 'var(--muted)'], pair: ['Co-authored commit', 'var(--primary)'], pr: ['Pull request merged', 'var(--good)'], issue: ['Issue closed', 'var(--warn)'] };
+const KIND = { commit: ['Commit', 'var(--muted)'], merge: ['Merge commit', 'var(--muted)'], pair: ['Commit with a co-author', 'var(--primary)'], pr: ['Pull request merged', 'var(--good)'], issue: ['Issue closed', 'var(--warn)'] };
 
 function History() {
   const firstTarget = EVENTS.findIndex((e) => target(e));
@@ -313,7 +313,7 @@ function History() {
         <div className="tile" aria-live="polite" style={{ alignSelf: 'start' }}>
           <p className="eyebrow" style={{ marginBottom: 4 }}>{KIND[e.kind][0]} · {stamp(e.at)}</p>
           <h3><span className="mono">{e.label}</span> {e.title}</h3>
-          {e.commit && <p className="hint">Author {e.commit.author}{e.commit.coauthors.length ? `, co-author @${e.commit.coauthors.join(', @')} (Co-authored-by trailer)` : ''}.</p>}
+          {e.commit && <p className="hint">Author {e.commit.author}{e.commit.coauthors.length ? `, co-author @${e.commit.coauthors.join(', @')} (co-author trailer)` : ''}.</p>}
           {e.pr && <p className="hint">Opened {stamp(e.pr.created_at)}, {e.pr.commits} commit(s), {e.pr.review_count} review(s): {e.pr.review_states.join(', ')}.</p>}
           {e.issue && <p className="hint">Opened {stamp(e.issue.created_at)}, closed {closeSeconds(e.issue)} s later.</p>}
           {t ? (
