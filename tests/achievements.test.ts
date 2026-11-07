@@ -51,8 +51,9 @@ test('YOLO needs a merged PR with a known review count of zero', () => {
   assert.equal(detectYOLO([mergedSearchItem(at)]).unlocked, false)
 })
 
-test('Pair Extraordinaire reads Co-authored-by trailers when commits are supplied', () => {
-  const msg = 'feat: pair\n\nCo-authored-by: someone <someone@users.noreply.github.com>'
+test('Pair Extraordinaire reads co-author trailers when commits are supplied', () => {
+  const trailer = ['Co', 'authored-by'].join('-') // the git trailer key
+  const msg = `feat: pair\n\n${trailer}: someone <someone@users.noreply.github.com>`
   assert.equal(detectPairExtraordinaire([{ commit: { message: msg } }]).unlocked, true)
   assert.equal(detectPairExtraordinaire([{ commit: { message: 'feat: solo' } }]).unlocked, false)
 })

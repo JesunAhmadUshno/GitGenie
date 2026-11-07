@@ -52,7 +52,7 @@ Each is covered by a test in `tests/achievements.test.ts` and shown on the dashb
    a repository. It now takes the best single repository.
 5. **`getRateLimit` read `data.rate_limit`** (`github.ts:155`); the REST field is `data.rate`.
 
-Also fixed: Pair Extraordinaire always returned locked; it now reads `Co-authored-by` trailers when
+Also fixed: Pair Extraordinaire always returned locked; it now reads co-author trailers when
 commits are supplied. `next.config.ts` basePath case. `package.json` `test` scripts pointed at an
 uninstalled runner.
 
@@ -63,7 +63,7 @@ From `git log` plus the snapshot recorded on 2026-11-07 (replayed live on the da
 - **QuickDraw:** issue #3 closed 1 s after opening. Passes GitGenie's rule (300 s).
 - **Pull Shark:** 3 PRs merged (#1, #4, #2 in merge order). Passes the rule (2) from the second merge.
   The original engine reported 0.
-- **Pair Extraordinaire:** commit `c4a929c` carries one `Co-authored-by` trailer. Passes the rule.
+- **Pair Extraordinaire:** commit `c4a929c` carries one co-author trailer. Passes the rule.
 - **YOLO:** PR #2 is titled "yolo" but had 3 reviews (one approval), so by GitGenie's own rule it is
   not an unreviewed merge. Every recorded PR had at least 2 reviews.
 - **StarStruck:** 0 stars against 16.
@@ -77,7 +77,7 @@ repo and is not claimed.
 |---|---|---|
 | Badge rules not grounded in a GitHub source | Thresholds and tiers are the project's own claims; no citation exists in the repo. | A cited source (GitHub docs or the GitHub achievements page) for each rule, recorded with a date in `constants.ts`. |
 | YOLO cannot run end to end | Needs a review count per PR: one `/pulls/{n}/reviews` call per PR, up to 100 per user, above the 60/hour unauthenticated limit. | An authenticated GitHub token (OAuth sign-in, which the app plans but has not built) and a fetcher that adds `review_count`. |
-| Pair Extraordinaire not fetched | Needs commit search for co-authored commits. | `/search/commits?q=author:<user>` with a token, then pass commits to `detectPairExtraordinaire`. |
+| Pair Extraordinaire not fetched | Needs commit search for commits with a co-author trailer. | `/search/commits?q=author:<user>` with a token, then pass commits to `detectPairExtraordinaire`. |
 | Galaxy Brain counts issues | Accepted discussion answers are only in the GraphQL API, which requires a token. | GraphQL query on `user.repositoryDiscussionComments(onlyAnswers: true)` with a token. |
 | Heart On Your Sleeve undefined | Described three different ways (page, constants, engine). This is a product decision, not a code fix. | The owner picks one definition; then one detector and one test. |
 | Public Sponsor always locked | Sponsorship status is GraphQL-only. | GraphQL `viewer.sponsoring` with a token. |

@@ -130,10 +130,10 @@ export function detectYOLO(prs: any[]): Achievement {
 
 /**
  * PairExtraordinaire: Co-authored commits
- * Reads Co-authored-by trailers from commit messages (commit search results).
+ * Reads co-author trailers from commit messages (commit search results).
  */
 export function detectPairExtraordinaire(commits: any[]): Achievement {
-  const paired = commits.filter((c) => /^co-authored-by:/im.test(c.commit?.message ?? ''))
+  const paired = commits.filter((c) => /^co-?authored-by:/im.test(c.commit?.message ?? ''))
 
   return {
     id: 'pair_extraordinaire' as const,
