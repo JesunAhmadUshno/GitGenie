@@ -150,7 +150,7 @@ export function detectPairExtraordinaire(commits: any[]): Achievement {
  * GalaxyBrain: Answer 2+ discussion questions
  * Heuristic: Active in community/issues
  */
-function detectGalaxyBrain(issues: any[]): Achievement {
+export function detectGalaxyBrain(issues: any[]): Achievement {
   const answered = issues.length // Rough estimate
 
   return {
@@ -188,7 +188,7 @@ export function detectStarStruck(repos: any[]): Achievement {
  * PublicSponsor: Become a GitHub Sponsor
  * Heuristic: Check if user has sponsors profile
  */
-function detectPublicSponsor(user: any): Achievement {
+export function detectPublicSponsor(user: any): Achievement {
   // GitHub API doesn't easily expose sponsor status
   // Would need additional API call or GitHub GraphQL
 
@@ -206,7 +206,7 @@ function detectPublicSponsor(user: any): Achievement {
 /**
  * HeartOnYourSleeve: Receive profile stars
  */
-function detectHeartOnYourSleeve(followers: any[]): Achievement {
+export function detectHeartOnYourSleeve(followers: any[]): Achievement {
   return {
     id: 'heart_on_your_sleeve' as const,
     name: 'Heart On Your Sleeve',
