@@ -3,8 +3,8 @@ import type { NextConfig } from 'next'
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   output: 'export',
-  basePath: '/gitgenie',
-  assetPrefix: '/gitgenie/',
+  basePath: '/GitGenie',
+  assetPrefix: '/GitGenie/',
   
   images: {
     unoptimized: true,

@@ -9,7 +9,11 @@ import {
   getGitHubPullRequests,
   getGitHubIssues,
   getUserFollowers,
-} from './github'
+} from './github.ts'
+import { ACHIEVEMENTS } from '../utils/constants.ts'
+
+const isMerged = (pr: any) => Boolean(pr.pull_request?.merged_at ?? pr.merged_at)
+const seconds = (from: string, to: string) => (Date.parse(to) - Date.parse(from)) / 1000
 
 export type AchievementType =
   | 'quick_draw'
@@ -48,7 +52,7 @@ export async function detectAchievements(username: string): Promise<Achievement[
     quick_draw: detectQuickDraw(issues),
     pull_shark: detectPullShark(prs),
     yolo: detectYOLO(prs),
-    pair_extraordinaire: detectPairExtraordinaire(prs),
+    pair_extraordinaire: detectPairExtraordinaire([]), // commit search is not fetched yet
     galaxy_brain: detectGalaxyBrain(issues),
     startstruck: detectStarStruck(repos),
     public_sponsor: detectPublicSponsor(user),
@@ -60,9 +64,9 @@ export async function detectAchievements(username: string): Promise<Achievement[
 
 /**
  * QuickDraw: Close an issue in under 5 minutes
- * Detected by: Issue closed very quickly (heuristic: assume fast closures on old issues)
+ * Detected by: an issue whose closed_at minus created_at is within the constants.ts time limit
  */
-function detectQuickDraw(issues: any[]): Achievement {
+export function detectQuickDraw(issues: any[]): Achievement {
   const baseAchievement = {
     id: 'quick_draw' as const,
     name: 'QuickDraw',
@@ -71,13 +75,15 @@ function detectQuickDraw(issues: any[]): Achievement {
     rarity: 'rare' as const,
   }
 
-  // Heuristic: If user has many closed issues, likely has quick-closed some
-  const closedIssues = issues.filter((i) => i.closed_at)
-  const hasQuickCloses = closedIssues.length > 5 // Estimate
+  const limit = ACHIEVEMENTS.QUICK_DRAW.requirements.timeLimit
+  const quickCloses = issues.filter(
+    (i) => i.closed_at && i.created_at && seconds(i.created_at, i.closed_at) <= limit
+  )
+  const hasQuickCloses = quickCloses.length > 0
 
   return {
     ...baseAchievement,
-    progress: Math.min(100, closedIssues.length * 20),
+    progress: hasQuickCloses ? 100 : 0,
     unlocked: hasQuickCloses,
     unlockedAt: hasQuickCloses ? new Date() : undefined,
   }
@@ -86,8 +92,9 @@ function detectQuickDraw(issues: any[]): Achievement {
 /**
  * PullShark: Merge 2+ pull requests
  */
-function detectPullShark(prs: any[]): Achievement {
-  const mergedPRs = prs.filter((pr) => pr.merged_at)
+export function detectPullShark(prs: any[]): Achievement {
+  // Search API items keep the merge time under pull_request.merged_at.
+  const mergedPRs = prs.filter(isMerged)
 
   return {
     id: 'pull_shark' as const,
@@ -103,10 +110,11 @@ function detectPullShark(prs: any[]): Achievement {
 
 /**
  * YOLO: Have a PR merged without review
- * Heuristic: PRs from new accounts or single-commit PRs
+ * Needs a review_count per PR (from /pulls/{n}/reviews); search items do not carry one,
+ * so a PR without a known count is never treated as unreviewed.
  */
-function detectYOLO(prs: any[]): Achievement {
-  const yoloPRs = prs.filter((pr) => pr.merged_at && pr.review_comments === 0)
+export function detectYOLO(prs: any[]): Achievement {
+  const yoloPRs = prs.filter((pr) => isMerged(pr) && pr.review_count === 0)
 
   return {
     id: 'yolo' as const,
@@ -122,11 +130,10 @@ function detectYOLO(prs: any[]): Achievement {
 
 /**
  * PairExtraordinaire: Co-authored commits
- * Heuristic: Based on username patterns or commit message analysis
+ * Reads Co-authored-by trailers from commit messages (commit search results).
  */
-function detectPairExtraordinaire(_prs: any[]): Achievement {
-  // This would require deeper commit analysis not available in basic API
-  // Estimate based on collaborative activity
+export function detectPairExtraordinaire(commits: any[]): Achievement {
+  const paired = commits.filter((c) => /^co-authored-by:/im.test(c.commit?.message ?? ''))
 
   return {
     id: 'pair_extraordinaire' as const,
@@ -134,8 +141,8 @@ function detectPairExtraordinaire(_prs: any[]): Achievement {
     description: 'Co-author commits with others',
     icon: '🤝',
     rarity: 'rare' as const,
-    progress: 0,
-    unlocked: false, // Requires deeper analysis
+    progress: paired.length > 0 ? 100 : 0,
+    unlocked: paired.length > 0,
   }
 }
 
@@ -161,8 +168,9 @@ function detectGalaxyBrain(issues: any[]): Achievement {
 /**
  * StarStruck: Get 16+ repository stars
  */
-function detectStarStruck(repos: any[]): Achievement {
-  const totalStars = repos.reduce((sum, repo) => sum + (repo.stargazers_count || 0), 0)
+export function detectStarStruck(repos: any[]): Achievement {
+  // constants.ts: 16 stars on a repository, so take the best single repo, not the sum.
+  const totalStars = repos.reduce((best, repo) => Math.max(best, repo.stargazers_count || 0), 0)
 
   return {
     id: 'startstruck' as const,

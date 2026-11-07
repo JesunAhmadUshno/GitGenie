@@ -152,8 +152,8 @@ export async function getRateLimit(): Promise<{ remaining: number; reset: number
     if (!res.ok) return null
     const data = await res.json()
     return {
-      remaining: data.rate_limit.remaining,
-      reset: data.rate_limit.reset,
+      remaining: data.rate.remaining,
+      reset: data.rate.reset,
     }
   } catch {
     return null
