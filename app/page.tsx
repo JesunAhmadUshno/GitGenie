@@ -11,7 +11,7 @@ export default function Home() {
           <div className="text-2xl font-display font-bold bg-gradient-brand bg-clip-text text-transparent">
             GitGenie
           </div>
-          <Link href="/api/auth/login">
+          <Link href="/dashboard">
             <Button size="md">Login with GitHub</Button>
           </Link>
         </div>
@@ -27,7 +27,7 @@ export default function Home() {
           with our interactive, jaw-dropping platform.
         </p>
         <div className="flex gap-4 justify-center flex-wrap animate-entrance-scale">
-          <Link href="/api/auth/login">
+          <Link href="/dashboard">
             <Button size="lg" variant="primary">
               Start Unlocking Badges
             </Button>
@@ -107,7 +107,7 @@ export default function Home() {
           <p className="text-foreground-muted mb-6">
             Join developers from around the world in unlocking GitHub&apos;s most exclusive badges
           </p>
-          <Link href="/api/auth/login">
+          <Link href="/dashboard">
             <Button size="lg" variant="primary">
               Login & Start
             </Button>
