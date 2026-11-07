@@ -1,8 +1,9 @@
 name: Pages
 
-# Builds the live dashboard in site/ from the repo's own files and publishes it to GitHub Pages
-# at /GitGenie/. This is the only workflow that deploys Pages (deploy-pages.yml now only checks
-# the Next.js app). The site reads lib/, app/, server/ and git history, so every push to main rebuilds.
+# Publishes both sites to GitHub Pages in one artifact: the Next.js app (static export) at
+# /GitGenie/ and the live dashboard in site/ at /GitGenie/lab/. This is the only workflow that
+# deploys Pages (deploy-pages.yml only checks the app). The dashboard reads lib/, app/, server/
+# and git history, so every push to main rebuilds.
 on:
   push:
     branches: [main]
@@ -28,15 +29,24 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: site/package-lock.json
+          cache-dependency-path: |
+            package-lock.json
+            site/package-lock.json
+      - name: Build the Next.js app (static export to out/)
+        run: npm install --legacy-peer-deps && npm run build
       - run: npm ci
         working-directory: site
       - run: npm run build
         working-directory: site
+      - name: Assemble app at / and dashboard at /lab/
+        run: |
+          mkdir -p out/lab
+          cp -r site/dist/. out/lab/
+          test -f out/index.html && test -f out/lab/index.html
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: site/dist
+          path: out
   deploy:
     needs: build
     runs-on: ubuntu-latest

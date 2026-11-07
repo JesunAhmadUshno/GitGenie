@@ -2,7 +2,7 @@
 
 Unlock and track GitHub profile achievements with a modern interactive dashboard.
 
-Live dashboard: https://jesunahmadushno.github.io/GitGenie/
+Live dashboard: https://jesunahmadushno.github.io/GitGenie/lab/ (the app itself: https://jesunahmadushno.github.io/GitGenie/)
 
 The live dashboard (built from `site/`) runs GitGenie's achievement detectors in the browser,
 compares them with the rules in `lib/utils/constants.ts`, and replays this repo's own badge
@@ -52,7 +52,7 @@ npm run dev
 
 ## Deploy
 
-- `.github/workflows/pages.yml` builds `site/` and publishes it to GitHub Pages at `/GitGenie/`.
+- `.github/workflows/pages.yml` builds the Next.js app and `site/`, and publishes the app at `/GitGenie/` and the dashboard at `/GitGenie/lab/`.
 - `.github/workflows/deploy-pages.yml` runs the engine tests and the Next.js build; it no longer deploys.
 
 ## Docs
