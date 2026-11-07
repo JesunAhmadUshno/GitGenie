@@ -43,7 +43,8 @@ app.get('/health', (req, res) => {
 // app.use('/api/leaderboard', leaderboardRoutes)
 
 // Error handling middleware
-app.use((err: Error, req: express.Request, res: express.Response) => {
+// Express only treats a handler as an error handler when it takes all four arguments.
+app.use((err: Error, req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error('Error:', err.message)
   res.status(500).json({
     success: false,
