@@ -1,0 +1,14 @@
+{
+  "name": "gitgenie-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "history": "node scripts/extract-history.mjs",
+    "check": "node --experimental-strip-types --disable-warning=ExperimentalWarning --disable-warning=MODULE_TYPELESS_PACKAGE_JSON src/rules.check.mjs",
+    "build": "npm run history && npm run check && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": { "react": "18.3.1", "react-dom": "18.3.1" },
+  "devDependencies": { "@vitejs/plugin-react": "4.3.4", "vite": "6.4.5" }
+}
