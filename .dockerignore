@@ -17,4 +17,3 @@ out
 coverage
 .turbo
 yarn.lock
-package-lock.json
