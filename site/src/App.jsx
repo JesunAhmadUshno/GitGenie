@@ -110,7 +110,7 @@ export default function App() {
   useReveal();
   const [mode, setMode] = useState('written');
   return (
-    <div className="wrap">
+    <div className="wrap"><a className="skip" href="#top">Skip to content</a>
       <MenuBar />
       <div className="glow" aria-hidden="true" />
       <Hero />
@@ -124,7 +124,7 @@ export default function App() {
       <Dock />
       <footer>
         Code: MIT. Badge rules are GitGenie's own (<code>lib/utils/constants.ts</code>), not GitHub's published policy. Every number on this page is read from the repo at build time or computed in your browser; PR and issue metadata is a recorded <code>gh api</code> snapshot from {CAPTURED}.
-      </footer>
+      <nav className="support" aria-label="Support this work"><a href="https://github.com/sponsors/JesunAhmadUshno">Sponsor this work</a><a href="https://github.com/sponsors/JesunAhmadUshno">Donate</a><a href="https://buymeacoffee.com/jesun">Buy Me a Coffee</a><a href="https://calendly.com/jesunahmadushno/30min">Work with me</a></nav></footer>
     </div>
   );
 }
@@ -132,7 +132,7 @@ export default function App() {
 function Hero() {
   const mismatches = evaluate(SPEC, RECORDED, 'written').filter((r) => r.mismatch).length;
   return (
-    <header className="card hero window" id="top" data-title="GitGenie — README">
+    <header className="card hero window" id="top" data-title="GitGenie - README">
       <div className="head">
         <p className="eyebrow">Product app · Phase 0/1 · landing page plus stubs</p>
         <span className="pill warn">● Early build</span>
@@ -171,7 +171,7 @@ const ENGINE_NOTE = {
 
 function Badges() {
   return (
-    <section id="badges" className="card window reveal" data-title={`achievements.ts — ${SPEC.length} rules`}>
+    <section id="badges" className="card window reveal" data-title={`achievements.ts - ${SPEC.length} rules`}>
       <p className="eyebrow">Badge catalogue</p>
       <h2>{word(SPEC.length)} rules, generated from the repo's constants file at build time.</h2>
       <p className="sub">
@@ -204,7 +204,7 @@ function Playground({ mode, setMode }) {
   const mism = rows.filter((r) => r.mismatch).length;
   const isRecorded = JSON.stringify(c) === JSON.stringify(RECORDED);
   return (
-    <section id="playground" className="card window reveal" data-title="badge_checker — live">
+    <section id="playground" className="card window reveal" data-title="badge_checker - live">
       <div className="head">
         <div>
           <p className="eyebrow">Rule playground · computed in your browser</p>
@@ -272,7 +272,7 @@ function History() {
   EVENTS.forEach((ev, i) => { const d = day(ev.at); if (!days.length || days[days.length - 1].d !== d) days.push({ d, i }); });
   const move = (k) => setSel((s) => Math.max(0, Math.min(EVENTS.length - 1, s + k)));
   return (
-    <section id="history" className="card window reveal" data-title="git log — badge trials">
+    <section id="history" className="card window reveal" data-title="git log - badge trials">
       <div className="head">
         <div>
           <p className="eyebrow">Own-history audit · recorded replay</p>
@@ -349,7 +349,7 @@ function Audit({ setMode }) {
   };
   const keyOf = { pull_shark: 'PULL_SHARK', yolo: 'YOLO', quick_draw: 'QUICK_DRAW', startstruck: 'STARSTRUCK' };
   return (
-    <section id="audit" className="card window reveal" data-title="github.ts — field check">
+    <section id="audit" className="card window reveal" data-title="github.ts - field check">
       <p className="eyebrow">Engine audit</p>
       <h2>{word(history.defects.length)} lines that made the detector wrong, quoted from the original commit.</h2>
       <p className="sub">
@@ -444,7 +444,7 @@ function Reproduce() {
     ['PROJECT_ARCHITECTURE.md', 'Architecture plan', 'The planned full stack'],
   ];
   return (
-    <section id="reproduce" className="card window reveal" data-title="Terminal — npm run build">
+    <section id="reproduce" className="card window reveal" data-title="Terminal - npm run build">
       <p className="eyebrow">Reproduce it</p>
       <h2>Three commands rebuild every number on this page.</h2>
       <ol className="steps" style={{ marginTop: 16 }}>
