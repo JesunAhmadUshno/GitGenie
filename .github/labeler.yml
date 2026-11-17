@@ -1,0 +1,24 @@
+app:
+  - changed-files:
+      - any-glob-to-any-file: ["app/**"]
+components:
+  - changed-files:
+      - any-glob-to-any-file: ["components/**"]
+lib:
+  - changed-files:
+      - any-glob-to-any-file: ["lib/**", "hooks/**", "store/**", "types/**", "styles/**"]
+server:
+  - changed-files:
+      - any-glob-to-any-file: ["server/**", "prisma/**", "k8s/**"]
+tests:
+  - changed-files:
+      - any-glob-to-any-file: ["tests/**"]
+site:
+  - changed-files:
+      - any-glob-to-any-file: ["site/**"]
+docs:
+  - changed-files:
+      - any-glob-to-any-file: ["docs/**", "README.md"]
+automation:
+  - changed-files:
+      - any-glob-to-any-file: [".github/**"]
